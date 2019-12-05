@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadaca 1.2</title>
+
+    <script>
+        var Singleton = (function(){
+            let obj = null;
+
+            let getInstance = () =>{
+                if (obj == null){
+                    obj = Date.now();
+                }
+                return obj;
+            }
+
+            return {
+                getInstance : getInstance
+            }
+
+        })();
+
+
+        console.log('Testing Singleton!');
+        console.log('Creating i1');
+        let i1 = Singleton.getInstance();
+        console.log('i1 was created at time[Number ' + i1 + ']');
+        console.log('Creating i2');
+        let i2 = Singleton.getInstance();
+        console.log('i2 was created at time[Number ' + i2 + ']');
+        console.log('Checking if i1 and i2 are the same variable: ', i1 === i2);
+        console.log('Creating i3 in different execution context at time: ', Date.now());
+
+        function newContext() {
+            let i3 = Singleton.getInstance();
+            console.log('i3 was created at time[Number ' + i3 + ']');
+
+            return i3;
+        }
+
+        newContext()
+        console.log('Checking if i1 and i3 are the same variable: ', i1 === newContext());
+        console.log('Checking if i2 and i3 are the same variable: ', i2 === newContext());
+        console.log('Checking if i1 and i2 are the same variable: ', i1 === i2);
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

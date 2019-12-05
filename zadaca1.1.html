@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadaca 1.1</title>
+
+    <script>
+        class NPC {
+            constructor(name, hitpoints){
+                this.name = name;
+                this.hitpoints = hitpoints;
+            }
+
+            status(){
+                return "Name: "+ this.name + "  Hitpoints: " + this.hitpoints;
+            }
+
+            isAlive(){
+                return this.hitpoints;
+            }
+
+            died(){
+                if (this.hitpoints <= 0){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+
+        class Hero extends NPC{
+            constructor(name, hitpoints = 100, damage = 10){
+                super(name, hitpoints);
+                this.damage = damage;
+                this.critical = false;
+            }
+
+
+            attact(neprijatel){
+                if (this.critical) {
+                    neprijatel.hitpoints = neprijatel.hitpoints - this.damage * 1.5;
+                }
+                else{
+                    neprijatel.hitpoints = neprijatel.hitpoints - this.damage;
+                }
+                console.log (this.name + " go napagna " + neprijatel.name);
+                if (neprijatel instanceof Hero){
+                    if(this.critical && neprijatel.isAlive()){
+                        this.critical = false;
+                        neprijatel.critical = true;
+                    }
+
+                    if(this.critical && !neprijatel.isAlive()){
+                        this.critical = false;
+                    }
+
+                }
+            }
+        }
+
+
+        let brojNaIgrachi = Math.floor((Math.random()*40) + 11);
+        let igrachi = [];
+
+        for (let i=0; i < brojNaIgrachi; i++){
+            let tip = Math.floor(Math.random()*2);
+            if (tip == 0){
+                igrachi.push(new NPC("NPC_broj_" + i, 100));
+            }
+            else{
+                igrachi.push(new Hero("Hero_broj_" + i));
+            }
+        }
+
+        let indexCritical = Math.floor((Math.random()) * brojNaIgrachi);
+        while(!(igrachi[indexCritical] instanceof Hero)){
+            indexCritical = Math.floor((Math.random()) * brojNaIgrachi)
+        }
+
+        igrachi[indexCritical].critical = true;
+
+
+
+        function start(){
+            while (igrachi.length > 1) {
+                let napagachID =  Math.floor((Math.random()) * igrachi.length);
+
+                 //napagachot treba da bide HERO
+                 while(!(igrachi[napagachID] instanceof Hero)) {
+                     let newID = Math.floor((Math.random()) * igrachi.length);
+                     napagachID = newID;
+                 }
+
+                let napagach = igrachi[napagachID];
+
+
+
+                let neprijatelID = Math.floor((Math.random()) * igrachi.length);
+                while(neprijatelID == napagachID){
+                    neprijatelID = Math.floor((Math.random()) * igrachi.length);
+                }
+
+                let neprijatel = igrachi[neprijatelID];
+
+
+                napagach.attact(neprijatel);
+
+                if (neprijatel.died()){
+                    console.log('Dead: ' + neprijatel.name);
+                    igrachi.splice(neprijatelID,1);
+                }
+
+
+
+
+            }
+        }
+
+        start();
+        console.log("Pobednik e " + igrachi[0].status());
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>
